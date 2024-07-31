@@ -1,0 +1,31 @@
+1. Install ceph-adm (Quincy)
+
+apt install cephadm ceph-common
+cephadm add-repo --release quincy
+
+# Jika error ubuntu jammy
+rm /etc/apt/sources.list.d/ceph.list
+apt update
+cephadm install
+
+2. Bootstrap ceph
+
+#exec on all nodes
+
+mkdir -p /etc/ceph
+
+#exec on mv-ceph1 (After bootstraping done, copy the command for deploying)
+cephadm bootstrap --mon-ip 172.16.120.10 --initial-dashboard-user admin --initial-dashboard-password gladiators88@ --allow-fqdn-hostname --skip-monitoring-stack
+
+#copy this
+sudo /usr/sbin/cephadm shell --fsid 6283e4aa-4f0e-11ef-a93f-df62e3179b01 -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring
+
+#verify
+ceph -v
+ceph -s
+
+#Copy ceph.pub key file to other nodes
+ssh-copy-id -f -i /etc/ceph/ceph.pub mv-ceph2
+ssh-copy-id -f -i /etc/ceph/ceph.pub mv-ceph3
+
+

@@ -1,0 +1,39 @@
+1. Deploy ceph
+
+sudo /usr/sbin/cephadm shell --fsid 6283e4aa-4f0e-11ef-a93f-df62e3179b01 -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring
+
+2. Add host & label
+
+ceph orch host add mv-ceph2 172.16.120.20 _admin
+ceph orch host add mv-ceph3 172.16.120.30 _admin
+ceph orch host label add mv-ceph1 _admin
+
+ceph orch host label add mv-ceph1 osd-node
+ceph orch host label add mv-ceph2 osd-node
+ceph orch host label add mv-ceph3 osd-node
+
+3. Add placement for mgr & mon
+
+ceph orch apply mon --placement="mv-ceph1,mv-ceph2,mv-ceph3"
+ceph orch apply mgr --placement="mv-ceph1,mv-ceph2,mv-ceph3"
+
+4. Add osd 
+
+cat<<EOF > osd.yaml
+service_type: osd
+service_id: osd-hdd
+placement:
+  label: "osd-node"
+data_devices:
+  paths:
+    - /dev/vdb
+    - /dev/vdc
+EOF
+
+ceph orch apply -i osd.yaml
+
+5. Verify 
+
+ceph -s
+ceph osd tree
+

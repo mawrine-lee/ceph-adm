@@ -1,0 +1,24 @@
+1. Change hostname & mapping host
+
+hostnamectl set-hostname mv-ceph1
+hostnamectl set-hostname mv-ceph2
+hostnamectl set-hostname mv-ceph3
+
+cat << EOF >> /etc/hosts
+172.16.120.10 mv-ceph1
+172.16.120.20 mv-ceph2
+172.16.120.30 mv-ceph3
+EOF
+
+2. Update package & set timezone, sync time
+
+sudo apt update -y
+sudo apt-get install chrony -y
+sudo timedatectl set-timezone Asia/Jakarta
+
+3. Buat ssh-key pada setiap node, copy pada authorized_keys file disemua node.
+
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub
+nano ~/.ssh/authorized_keys
+
