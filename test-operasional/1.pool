@@ -1,0 +1,27 @@
+1. Create pool 
+
+ceph osd pool create <name_pool> <pg_num>
+
+2. Insert data into pool 
+
+echo "Hello, Ceph!" | rados --pool test-pool put test.txt -
+
+rados put <object-name> <local-file> --pool=test-pool
+
+3. download data from pool
+
+rados get <object-name> <local-file> --pool=test-pool
+
+4. rm object from pool 
+
+sudo rados rm <object-name> --pool=pool-test 
+
+5. copy content between object
+
+sudo rados cppool <origin-pool> <copy-pool>
+
+6. delete pool 
+
+ceph config set mon mon_allow_pool_delete true
+
+ceph osd pool delete test-pool test-pool --yes-i-really-really-mean-it
