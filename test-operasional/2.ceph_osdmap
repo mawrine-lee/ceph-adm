@@ -1,0 +1,29 @@
+1. Create pool
+
+ceph osd pool create osdmap-pool 128
+
+ceph osd lspools
+
+ceph osd pool get osdmap-pool pg_num
+
+2. By default ceph max object size is limited to 128MiB
+sudo ceph config set global osd_max_object_size 600M/1G
+
+3. Put object
+
+rados -p osdmap-pool put <object_name> <name_file>
+
+4. Show where object are stored in OSDs
+
+ceph osd map <pool_name> <object_name>
+
+5. How to read
+
+osdmap e1805 pool 'osdmap-pool' (5) object 'bigobject' -> pg 5.f71d4b98 (5.18) -> up ([2,5,1], p2) acting ([2,5,1], p2)
+
+- osdmap e1805 = Version of map
+- 'osdmap-pool' =  name of the pool
+- (5) = id of pool
+- pg 5.f71d4b98 = PGs ID which object belongs to
+- up ([2,5,1], p2) acting ([2,5,1], p2) = if you see 3 number (2,5,1) it means your pool is set 3 replication, which means every object has copy in 3 different osd, and you see p2 it means, the primary object is exist on osd.2
+
