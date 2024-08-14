@@ -1,0 +1,23 @@
+#create pool that contain block device will be used by a vm
+
+1. Create pool 
+
+sudo ceph osd pool create pool-test2 128
+
+sudo rbd pool init pool-test2
+
+2. Create block device image w/ 5GB size
+
+sudo rbd create pool-test2/block0 --size 5120
+
+3. Show detail of block device image created before
+
+sudo rbd info pool-test2/block0
+
+4. Map the image into block device in VM/System
+
+sudo rbd map pool-test2/block0 -m pod-<username>-ceph1 -k /etc/ceph/ceph.client.admin.keyring
+
+#extras 
+sudo rbd import /tmp/img pool-test2/block1
+sudo rbd export pool-test2/block0 /tmp/img
